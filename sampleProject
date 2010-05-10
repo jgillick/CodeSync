@@ -1,19 +1,24 @@
+#
+# CodeSync project file
+# http://github.com/jgillick/CodeSync/
+#
+
 # Server details
 # NOTE: You need to setup public/private keys from your local to your server: http://bit.ly/PcTRK 
-server="jgillick-md.linkedin.biz"
-username="jgillick"
+server="remoteserver.com"
+username="johndoe"
 
 # Base directories to sync from/to
-remote_basedir="/Users/jgillick/LinkedIn/svn/network"
-local_basedir="/Users/jeremy/Linkedin/Remote"
+remote_basedir="/home/johndoe/svn/"
+local_basedir="/work/projects/remote"
 
 # The directories to sync, relative to the base directories
-sync_dirs=[ "content/leo/static/js",
-            "content/leo/static/css",
-            "leo/gui-impl/jsp" ]
+sync_dirs=[ "/static/js",
+            "/static/css",
+            "gui/jsp" ]     
 # sync_dirs=[  ] # This will sync the entire base directories
 
 # The contents of these directories will only sync "up" to the server.
 # This means the contents will never be downloaded from the server
 # but files added or changed locally will be sent to the server
-sync_up=[ "content/leo/static/img" ]
+sync_up=[ "/static/img" ]
