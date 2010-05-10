@@ -1,0 +1,42 @@
+#!/bin/sh
+
+INSTALL_DIR="/usr/local/bin"
+
+# Validate
+if [ "$(uname)" != "Darwin" ]; then
+  echo "ERROR: CodeSync only works on Mac OS X platforms."
+  exit 1
+fi
+if [ "$(which ruby)" == "" ]; then
+  echo "ERROR: CodeSync requires ruby: http://www.ruby-lang.org/en/"
+  exit 1
+fi
+
+LIB_DIR=$(ruby -e 'print $:.first')
+echo $LIB_DIR
+if [[ "$LIB_DIR" == "nil" || "$LIB_DIR" == "" ]]; then
+  echo "ERROR: Could not determine Ruby's library directory. Reinstall Ruby and try again. http://www.ruby-lang.org/en/"
+  exit 1
+fi
+
+# Copy files
+cp -rv lib/* $LIB_DIR
+if [ $? -ne 0 ]; then
+  echo "\nInstall Failed"
+  exit 1
+fi
+
+cp -v bin/codeSync $INSTALL_DIR
+if [ $? -ne 0 ]; then
+  echo "\nInstall Failed"
+  exit 1
+fi
+
+chmod 755 $INSTALL_DIR/codeSync
+if [ $? -ne 0 ]; then
+  echo "\nInstall Failed"
+  exit 1
+fi
+
+# Done
+echo "\nInstall Complete"

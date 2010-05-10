@@ -1,0 +1,57 @@
+= CodeSync =
+
+This is a mac utility that uses rsync to immediately synchronize file
+changes to a server or remote computer, as you work.
+
+NOTE: Since it uses rsync to communicate with the server, it is important
+to setup public/private keys: http://bit.ly/PcTRK
+
+It uses a project file (see example below) for the remote system connection
+settings and which directories to keep in sync.
+
+== INSTALL ==
+
+In the base directory run:
+
+  sudo ./install
+  
+- PASSWORDS and PUBLIC/PRIVATE KEYS -
+
+Each time rsync communicates with the server it'll ask for your password, which is
+really annoying, unless you setup public/private keys.
+
+Follow the instructions at the following URL to be able to sync without passwords:
+http://bit.ly/PcTRK 
+  
+== EXAMPLE PROJECT FILE ==
+
+   # Server details
+   server="jgillick-md.linkedin.biz"
+   username="jgillick"
+
+   # Base directories to sync from/to
+   remote_basedir="/Users/jgillick/LinkedIn/svn/network"
+   local_basedir="/Users/jeremy/Linkedin/Remote"
+
+   # The directories to sync, relative to the base directories
+   sync_dirs=[ "content/leo/static/js",
+               "content/leo/static/css",
+               "leo/gui-impl/jsp" ]
+               
+   # sync_dirs=[  ] # This will sync the entire base directories
+
+   # The contents of these directories will only sync "up" to the server.
+   # This means the contents will never be downloaded from the server
+   # but files added or changed locally will be sent to the server
+   sync_up=[ "content/leo/static/img" ]
+
+== BASE DIRECTORIES vs SYNC DIRECTORIES ==
+The base directories are where everything happens on the local and server.
+Often times, if you're working with a large code base, you wont want to download and 
+sync ALL the files. In this case you define the directories you'll be working on in the 
+sync_dirs array.
+
+If you don't want to download a directory, but upload any changes to the server, you can
+add those directory paths to the sync_up directory.
+
+

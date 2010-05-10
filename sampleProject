@@ -1,0 +1,17 @@
+# Server details
+server="jgillick-md.linkedin.biz"
+username="jgillick"
+
+# Base directories to sync from/to
+remote_basedir="/Users/jgillick/LinkedIn/svn/network"
+local_basedir="/Users/jeremy/Linkedin/Remote"
+
+# The directories to sync, relative to the base directories
+sync_dirs=[ "content/leo/static/js",
+            "content/leo/static/css",
+            "leo/gui-impl/jsp" ]
+
+# The contents of these directories will only sync "up" to the server.
+# This means the contents will never be downloaded from the server
+# but files added or changed locally will be sent to the server
+sync_up=[ "content/leo/static/img" ]
