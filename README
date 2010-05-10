@@ -10,13 +10,11 @@ It uses a project file (see example below) for the remote system connection
 settings and which directories to keep in sync.
 
 == INSTALL ==
-
-In the base directory run:
+To install CodeSync run:
 
   sudo ./install
   
-- PASSWORDS and PUBLIC/PRIVATE KEYS -
-
+== PASSWORDS and PUBLIC/PRIVATE KEYS ==
 Each time rsync communicates with the server it'll ask for your password, which is
 really annoying, unless you setup public/private keys.
 
