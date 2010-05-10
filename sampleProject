@@ -1,4 +1,5 @@
 # Server details
+# NOTE: You need to setup public/private keys from your local to your server: http://bit.ly/PcTRK 
 server="jgillick-md.linkedin.biz"
 username="jgillick"
 
@@ -10,6 +11,7 @@ local_basedir="/Users/jeremy/Linkedin/Remote"
 sync_dirs=[ "content/leo/static/js",
             "content/leo/static/css",
             "leo/gui-impl/jsp" ]
+# sync_dirs=[  ] # This will sync the entire base directories
 
 # The contents of these directories will only sync "up" to the server.
 # This means the contents will never be downloaded from the server
