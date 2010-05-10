@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+require 'fileutils'
 require 'fsevents'
 
 APP = { :version => "0.1",
@@ -91,9 +92,16 @@ eval contents
 if local_basedir.strip.empty?
 	print "You need to define local_basedir in the project file\n"
 	exit
-elsif !File.exists? local_basedir
-	print "#{local_basedir} does not exist\n"
-	exit
+elsif !File.exists?(local_basedir)
+  begin
+    FileUtils.mkdir_p(local_basedir)
+  rescue
+  	print "Could not create #{local_basedir}\n"
+	  exit
+	end
+elsif !File.directory?(local_basedir)
+    print "#{local_basedir} is not a directory\n"
+    exit
 end
 
 unless username.strip.empty?
