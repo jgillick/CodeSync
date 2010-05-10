@@ -99,9 +99,6 @@ end
 unless username.strip.empty?
 	username << "@"
 end
-unless server.strip.empty?
-	server << ":"
-end
 
 # Not sync directories, default to base directories
 if sync_dirs.count == 0
@@ -143,7 +140,7 @@ end
 # Syncronize from the server
 if syncFromRemote	
 	print "\nSyncronizing directories...\n"
-	cmd="rsync -aRvhz #{username}#{server}'#{remoteDirs.join(" ")}' #{local_basedir}"
+	cmd="rsync -aRvhz #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
 	ret=system(cmd)
 	
 	# Error
@@ -160,16 +157,34 @@ print "\nWatching for changes in:\n"
 print "\t#{localDirs.join("\n\t")}\n"
 print "...\n"
 stream = FSEvents::Stream.watch(*localDirs) do |events|  
-
-	events.modified_files.each do |file|
-		relativePath = file.gsub(local_basedir, "");
-		remote = File.join(remote_basedir, relativePath)
+  
+  # Get list of files to sync
+  fileList = events.modified_files
+  if fileList.count == 0 # directories
+    events.each do |event|
+      fileList << event.path
+    end
+  end
+  
+  # Sync
+  fileList.each do |path|
+		relativePath = path.gsub(local_basedir, "");
+		remotePath = File.join(remote_basedir, relativePath)
 		
 		print "\nSyncronizing #{relativePath}...\n"
-		cmd="rsync -ahz#{rsync_flags} #{file} #{username}#{server}#{remote}"
-		ret=system(cmd)
 		
-		# Error
+		# Make sure the directory exists
+		dir = File.dirname(remotePath)
+		cmd = "ssh #{username}#{server} mkdir -p #{dir}"
+		ret = system(cmd)
+		if ret == false
+			print "\nFAILED: Could not create the directory on the server: #{remotePath}\n\n"
+			next
+		end	
+		
+		# Rsync
+		cmd = "rsync -ahz#{rsync_flags} #{path} #{username}#{server}:#{remotePath}"
+		ret = system(cmd)
 		if ret == false
 			print "\nFAILED: An error occurred trying to synchronize a file. See above output for more details\n\n"
 		else
