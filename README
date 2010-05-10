@@ -6,8 +6,8 @@ changes to a server or remote computer, as you work.
 NOTE: Since it uses rsync to communicate with the server, it is important
 to setup public/private keys: http://bit.ly/PcTRK
 
-It uses a project file (see example below) for the remote system connection
-settings and which directories to keep in sync.
+CodeSync uses a project file (see example below) that tells it how to connect to 
+the server and which directories to keep in sync.
 
 == INSTALL ==
 To install CodeSync run:
