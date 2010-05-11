@@ -4,9 +4,20 @@ PREFIX="/usr/local/"
 
 set -e
 
-echo "Checking system..."
+# Cleanup previous install
+if [ -d build ]; then
+  rm -r build
+fi
+
 
 # Validate
+if [ "$(whoami)" != "root" ]; then
+  echo "ERROR: You need to run this as root. (try: sudo ./install)"
+  exit 1
+fi
+
+echo "Checking system..."
+
 if [ "$(uname)" != "Darwin" ]; then
   echo "\nERROR: CodeSync only works on Mac OS X platforms."
   exit 1
@@ -15,17 +26,32 @@ if [ "$(which ruby)" == "" ]; then
   echo "\nERROR: CodeSync requires ruby: http://www.ruby-lang.org/en/"
   exit 1
 fi
-if [ "$(ruby -e "print require 'osx/foundation'" 2>/dev/null)" != "true" ]; then
-  echo "\nERROR: CodeSync requires RubyCocoa: http://rubycocoa.sourceforge.net/" 
-  echo " + INSTALL the correct version for your system: http://sourceforge.net/projects/rubycocoa/files/"
-  exit 1
-fi
 
 LIB_DIR=$(ruby -e 'print $:.first')
 echo $LIB_DIR
 if [[ "$LIB_DIR" == "nil" || "$LIB_DIR" == "" ]]; then
   echo "ERROR: Could not determine Ruby's library directory. Reinstall Ruby and try again. http://www.ruby-lang.org/en/"
   exit 1
+fi
+
+# Install RubyCocoa
+if [ "$(ruby -e "print require 'osx/foundation'" 2>/dev/null)" != "true" ]; then
+  echo "\n###############"
+  echo "## NOTICE: You do not have RubyCocoa installed!"
+  echo "###############"
+  echo "## Attempting to download and install RubyCocoa now..."
+  echo "##  + accept the server certificate if asked.\n"
+  
+  mkdir build
+  cd build
+  svn co https://rubycocoa.svn.sourceforge.net/svnroot/rubycocoa/trunk/src rubycocoa
+  cd rubycocoa
+  
+  ruby install.rb config
+  ruby install.rb setup
+  ruby install.rb install
+  
+  cd ../../
 fi
 
 echo "Done\n"
