@@ -1,14 +1,23 @@
 #!/bin/sh
 
-INSTALL_DIR="/usr/local/bin"
+PREFIX="/usr/local/"
+
+set -e
+
+echo "Checking system..."
 
 # Validate
 if [ "$(uname)" != "Darwin" ]; then
-  echo "ERROR: CodeSync only works on Mac OS X platforms."
+  echo "\nERROR: CodeSync only works on Mac OS X platforms."
   exit 1
 fi
 if [ "$(which ruby)" == "" ]; then
-  echo "ERROR: CodeSync requires ruby: http://www.ruby-lang.org/en/"
+  echo "\nERROR: CodeSync requires ruby: http://www.ruby-lang.org/en/"
+  exit 1
+fi
+if [ "$(ruby -e "print require 'osx/foundation'" 2>/dev/null)" != "true" ]; then
+  echo "\nERROR: CodeSync requires RubyCocoa: http://rubycocoa.sourceforge.net/" 
+  echo " + INSTALL the correct version for your system: http://sourceforge.net/projects/rubycocoa/files/"
   exit 1
 fi
 
@@ -19,6 +28,10 @@ if [[ "$LIB_DIR" == "nil" || "$LIB_DIR" == "" ]]; then
   exit 1
 fi
 
+echo "Done\n"
+
+echo "Installing..."
+
 # Copy files
 cp -rv lib/* $LIB_DIR
 if [ $? -ne 0 ]; then
@@ -26,17 +39,18 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-cp -v bin/codeSync $INSTALL_DIR
+cp -v bin/codeSync $INSTALL_DIR/bin
 if [ $? -ne 0 ]; then
   echo "\nInstall Failed"
   exit 1
 fi
 
-chmod 755 $INSTALL_DIR/codeSync
+chmod 755 $INSTALL_DIR/bin/codeSync
 if [ $? -ne 0 ]; then
   echo "\nInstall Failed"
   exit 1
 fi
+
 
 # Done
 echo "\nInstall Complete"
