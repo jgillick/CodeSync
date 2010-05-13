@@ -20,7 +20,24 @@ really annoying, unless you setup public/private keys.
 
 Follow the instructions at the following URL to be able to sync without passwords:
 http://bit.ly/PcTRK 
-  
+
+== Using CodeSync ==
+
+* First start by deciding where you want your local project workspace. For example: ~/Projects/Work/
+
+* In your workspace, create a directory for your files: ~/Projects/Work/files/ 
+
+* Copy the sampleProject file to your Work directory and name it 'project': ~/Projects/Work/project 
+
+* Edit the project file:
+    + Set the server/username (be sure you've setup your public/private keys)
+    + remote_basedir should be set to the workspace directory on your remote machine.
+    + Set local_basedir to '~/Projects/Work/files/'
+    + Add the directories you will be working in to the sync_dirs directory.
+    + If there are directories you want to keep in sync without downloading the contents, add them to sync_up. 
+    
+* Now run the program in the ~/Projects/Work/ directory: codeSync ./project 
+
 == EXAMPLE PROJECT FILE ==
 
    # Server details
@@ -29,7 +46,7 @@ http://bit.ly/PcTRK
 
    # Base directories to sync from/to
    remote_basedir="/home/johndoe/svn/"
-   local_basedir="/work/projects/remote"
+   local_basedir="~/Projects/Work/files/"
 
    # The directories to sync, relative to the base directories
    sync_dirs=[ "/static/js",
