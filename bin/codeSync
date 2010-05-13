@@ -83,8 +83,8 @@ File.foreach(projectFilePath) { |s|
 }
 
 # Execute project file
-server, username, remote_basedir, local_basedir = ""
-sync_up, sync_dirs = []
+server = username = remote_basedir = local_basedir = ""
+sync_up = sync_dirs = []
 eval(contents)
 
 # Validate project file

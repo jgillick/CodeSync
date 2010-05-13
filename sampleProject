@@ -21,4 +21,6 @@ sync_dirs=[ "/static/js",
 # The contents of these directories will only sync "up" to the server.
 # This means the contents will never be downloaded from the server
 # but files added or changed locally will be sent to the server
-sync_up=[ "/static/img" ]
+#
+# sync_up=[ "/static/img" ]
+sync_up=[ ]
