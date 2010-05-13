@@ -65,13 +65,13 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-cp -v bin/codeSync $INSTALL_DIR/bin
+cp -v bin/codeSync $PREFIX/bin
 if [ $? -ne 0 ]; then
   echo "\nInstall Failed"
   exit 1
 fi
 
-chmod 755 $INSTALL_DIR/bin/codeSync
+chmod 755 $PREFIX/bin/codeSync
 if [ $? -ne 0 ]; then
   echo "\nInstall Failed"
   exit 1

@@ -123,7 +123,10 @@ sync_dirs.each do |dir|
 	
 end
 sync_up.each do |dir|
-	localDirs << File.join(local_basedir, dir)
+  updir = File.join(local_basedir, dir)
+	FileUtils.mkdir_p(updir)
+	
+	localDirs << updir
 end
 
 # Sync to local first
@@ -148,7 +151,7 @@ end
 # Syncronize from the server
 if syncFromRemote	
 	print "\nSyncronizing directories...\n"
-	cmd="rsync -aRvhz #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
+	cmd="rsync -aRvhz --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
 	ret=system(cmd)
 	
 	# Error
@@ -166,12 +169,20 @@ print "\t#{localDirs.join("\n\t")}\n"
 print "...\n"
 stream = FSEvents::Stream.watch(*localDirs) do |events|  
   
+  if verbose
+    print "File event detected\n"
+  end
+  
   # Get list of files to sync
   fileList = events.modified_files
   if fileList.count == 0 # directories
     events.each do |event|
       fileList << event.path
     end
+  end
+  
+  if verbose
+    print "Files: #{fileList}\n"
   end
   
   # Sync
@@ -189,6 +200,10 @@ stream = FSEvents::Stream.watch(*localDirs) do |events|
 			print "\nFAILED: Could not create the directory on the server: #{remotePath}\n\n"
 			next
 		end	
+		
+		if File.directory?(path)
+		  path << "/"
+	  end
 		
 		# Rsync
 		cmd = "rsync -ahz#{rsync_flags} #{path} #{username}#{server}:#{remotePath}"

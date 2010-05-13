@@ -34,7 +34,7 @@ http://bit.ly/PcTRK
    # The directories to sync, relative to the base directories
    sync_dirs=[ "/static/js",
                "/static/css",
-               "gui/jsp" ]
+               "/gui/jsp" ]
                
    # sync_dirs=[  ] # This will sync the entire base directories
 
