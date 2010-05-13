@@ -15,7 +15,7 @@ local_basedir="/work/projects/remote"
 # The directories to sync, relative to the base directories
 sync_dirs=[ "/static/js",
             "/static/css",
-            "gui/jsp" ]     
+            "/gui/jsp" ]     
 # sync_dirs=[  ] # This will sync the entire base directories
 
 # The contents of these directories will only sync "up" to the server.
