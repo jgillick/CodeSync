@@ -4,39 +4,43 @@ This is a mac utility that uses rsync to immediately synchronize file
 changes to a server or remote computer, as you work.
 
 NOTE: Since it uses rsync to communicate with the server, it is important
-to setup public/private keys: http://bit.ly/PcTRK
+to setup passwordless public/private keys: http://bit.ly/PcTRK
 
 CodeSync uses a project file (see example below) that tells it how to connect to 
 the server and which directories to keep in sync.
 
-== INSTALL ==
-To install CodeSync run:
-
-  sudo ./install
-  
 == PASSWORDS and PUBLIC/PRIVATE KEYS ==
 Each time rsync communicates with the server it'll ask for your password, which is
-really annoying, unless you setup public/private keys.
+really annoying, unless you setup a passwordless public/private keys.
 
 Follow the instructions at the following URL to be able to sync without passwords:
 http://bit.ly/PcTRK 
 
+== INSTALL ==
+
+ * Download the latest version of CodeSync: 
+   http://github.com/jgillick/CodeSync/archives/master
+ 
+ * Extract the source code.
+ 
+ * In the source directory run: sudo ./install
+
 == Using CodeSync ==
 
-* First start by deciding where you want your local project workspace. For example: ~/Projects/Work/
+ * Decide where you want the local project workspace to be. For example: ~/Projects/Work/
 
-* In your workspace, create a directory for your files: ~/Projects/Work/files/ 
+ * In your workspace, create a directory for the files: ~/Projects/Work/files/ 
 
-* Copy the sampleProject file to your Work directory and name it 'project': ~/Projects/Work/project 
+ * Copy the sampleProject file to your Work directory and name it 'project': ~/Projects/Work/project 
+  (See 'EXAMPLE PROJECT FILE' section below)
 
-* Edit the project file:
-    + Set the server/username (be sure you've setup your public/private keys)
+ * Edit the project file:
+    + Set the server/username (be sure you have setup your passwordless public/private keys)
     + remote_basedir should be set to the workspace directory on your remote machine.
     + Set local_basedir to '~/Projects/Work/files/'
     + Add the directories you will be working in to the sync_dirs directory.
-    + If there are directories you want to keep in sync without downloading the contents, add them to sync_up. 
     
-* Now run the program in the ~/Projects/Work/ directory: codeSync ./project 
+ * Now run the program: codeSync ~/Projects/Work/project 
 
 == EXAMPLE PROJECT FILE ==
 
@@ -61,12 +65,11 @@ http://bit.ly/PcTRK
    sync_up=[ "/static/img" ]
 
 == BASE DIRECTORIES vs SYNC DIRECTORIES ==
-The base directories are where everything happens on the local and server.
-Often times, if you're working with a large code base, you wont want to download and 
-sync ALL the files. In this case you define the directories you'll be working on in the 
-sync_dirs array.
+The base directories are where everything happens on the local and server machines.
+If you're working with a large code base you wont want to download and sync ALL the files. 
+In this case you define the directories you'll be working on in the sync_dirs array.
 
-If you don't want to download a directory, but upload any changes to the server, you can
-add those directory paths to the sync_up directory.
+If you don't want to download the contents of a directory from the server, but upload any changes 
+that are made, you can add those directory paths to the sync_up array.
 
 
