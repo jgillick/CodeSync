@@ -3,7 +3,7 @@ require 'fileutils'
 require 'fsevents'
 
 APP = { :version => "0.1",
-        :build   => "2010-05-11" }
+        :build   => "2010-05-13" }
 
 # Print the script usage
 def print_usage
@@ -29,24 +29,23 @@ settings and which directories to keep in sync.
 EXAMPLE PROJECT FILE
 
    # Server details
-   server="jgillick-md.linkedin.biz"
-   username="jgillick"
+   server="remoteserver.com"
+   username="johndoe"
 
    # Base directories to sync from/to
-   remote_basedir="/Users/jgillick/LinkedIn/svn/network"
-   local_basedir="/Users/jeremy/Linkedin/Remote"
+   remote_basedir="/home/johndoe/svn/"
+   local_basedir="/work/projects/remote"
 
    # The directories to sync, relative to the base directories
-   sync_dirs=[ "content/leo/static/js",
-               "content/leo/static/css",
-               "leo/gui-impl/jsp" ]
-
+   sync_dirs=[ "/static/js",
+               "/static/css",
+               "/gui/jsp" ]     
    # sync_dirs=[  ] # This will sync the entire base directories
 
    # The contents of these directories will only sync "up" to the server.
    # This means the contents will never be downloaded from the server
    # but files added or changed locally will be sent to the server
-   sync_up=[ "content/leo/static/img" ]
+   sync_up=[ "/static/img" ]
 
 OEM
 
@@ -86,13 +85,21 @@ File.foreach(projectFilePath) { |s|
 # Execute project file
 server, username, remote_basedir, local_basedir = ""
 sync_up, sync_dirs = []
-eval contents
+eval(contents)
 
 # Validate project file
 if local_basedir.strip.empty?
 	print "You need to define local_basedir in the project file\n"
 	exit
-elsif !File.exists?(local_basedir)
+end
+
+unless username.strip.empty?
+	username << "@"
+end
+
+# Setup local path
+local_basedir = File.expand_path(local_basedir)
+if !File.exists?(local_basedir)
   begin
     FileUtils.mkdir_p(local_basedir)
   rescue
@@ -104,12 +111,8 @@ elsif !File.directory?(local_basedir)
     exit
 end
 
-unless username.strip.empty?
-	username << "@"
-end
-
-# Not sync directories, default to base directories
-if sync_dirs.count == 0
+# Sync base directories if no sync_dirs were specified
+if sync_dirs.count == 0 && sync_up.count == 0
   sync_dirs << "."
 end
 
@@ -122,6 +125,7 @@ sync_dirs.each do |dir|
 	remoteDirs << File.join(remote_basedir, ".", dir) # The dot is to remove the base path when rsyncing
 	
 end
+
 sync_up.each do |dir|
   updir = File.join(local_basedir, dir)
 	FileUtils.mkdir_p(updir)
