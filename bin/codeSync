@@ -112,7 +112,7 @@ elsif !File.directory?(local_basedir)
 end
 
 # Sync base directories if no sync_dirs were specified
-if sync_dirs.count == 0 && sync_up.count == 0
+if sync_dirs.size == 0 && sync_up.size == 0
   sync_dirs << "."
 end
 
@@ -179,7 +179,7 @@ stream = FSEvents::Stream.watch(*localDirs) do |events|
   
   # Get list of files to sync
   fileList = events.modified_files
-  if fileList.count == 0 # directories
+  if fileList.size == 0 # directories
     events.each do |event|
       fileList << event.path
     end
