@@ -154,7 +154,7 @@ end
 
 # Syncronize from the server
 if syncFromRemote	
-	print "\nSyncronizing directories...\n"
+	print "\nSynchronizing directories...\n"
 	cmd="rsync -aRvhz --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
 	ret=system(cmd)
 	
@@ -194,7 +194,7 @@ stream = FSEvents::Stream.watch(*localDirs) do |events|
 		relativePath = path.gsub(local_basedir, "");
 		remotePath = File.join(remote_basedir, relativePath)
 		
-		print "\nSyncronizing #{relativePath}...\n"
+		print "\nSynchronizing #{relativePath}...\n"
 		
 		# Make sure the directory exists
 		dir = File.dirname(remotePath)
