@@ -137,7 +137,7 @@ end
 syncFromRemote = false
 while true
 
-	print "Would you like syncronize FROM the remote server first? [Yn] "
+	print "Would you like synchronize FROM the remote server first? [Yn] "
 	input = STDIN.gets.chomp
 
 	if input == "" || input.downcase == "y"
@@ -152,7 +152,7 @@ while true
 	
 end
 
-# Syncronize from the server
+# Synchronize from the server
 if syncFromRemote	
 	print "\nSynchronizing directories...\n"
 	cmd="rsync -aRvhz --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
