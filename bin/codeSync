@@ -5,7 +5,7 @@ require 'fsevents'
 APP = { :version => "0.1",
         :build   => "2010-07-22" }
 
-RSYNC_TIMEOUT_SEC=5
+RSYNC_TIMEOUT_SEC=10
 
 # Print the script usage
 def print_usage
