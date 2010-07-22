@@ -3,7 +3,9 @@ require 'fileutils'
 require 'fsevents'
 
 APP = { :version => "0.1",
-        :build   => "2010-05-13" }
+        :build   => "2010-07-22" }
+
+RSYNC_TIMEOUT_SEC=1
 
 # Print the script usage
 def print_usage
@@ -58,13 +60,13 @@ projectFilePath = ""
 ARGV.each do |arg|
   if arg.strip == "-v"
     verbose = true
-    rsync_flags = "v"
+    rsync_flags << " -v"
   else
     projectFilePath = arg
     break
   end
 end
-
+rsync_flags << " --timeout=#{RSYNC_TIMEOUT_SEC}"
 
 if projectFilePath.strip.empty?
 	print_usage
@@ -155,7 +157,7 @@ end
 # Synchronize from the server
 if syncFromRemote	
 	print "\nSynchronizing directories...\n"
-	cmd="rsync -aRvhz --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
+	cmd="rsync -aRvhz--timeout=#{RSYNC_TIMEOUT_SEC} --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
 	ret=system(cmd)
 	
 	# Error
@@ -210,7 +212,7 @@ stream = FSEvents::Stream.watch(*localDirs) do |events|
 	  end
 		
 		# Rsync
-		cmd = "rsync -ahz#{rsync_flags} #{path} #{username}#{server}:#{remotePath}"
+		cmd = "rsync -ahz #{rsync_flags} #{path} #{username}#{server}:#{remotePath}"
 		ret = system(cmd)
 		if ret == false
 			print "\nFAILED: An error occurred trying to synchronize a file. See above output for more details\n\n"
