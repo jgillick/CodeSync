@@ -157,7 +157,7 @@ end
 # Synchronize from the server
 if syncFromRemote	
 	print "\nSynchronizing directories...\n"
-	cmd="rsync -aRvhz--timeout=#{RSYNC_TIMEOUT_SEC} --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
+	cmd="rsync -aRvhz --timeout=#{RSYNC_TIMEOUT_SEC} --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
 	ret=system(cmd)
 	
 	# Error
