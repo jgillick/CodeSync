@@ -4,7 +4,7 @@ This is a mac utility that uses rsync to immediately synchronize file
 changes to a server or remote computer, as you work.
 
 NOTE: Since it uses rsync to communicate with the server, it is important
-to setup passwordless public/private keys: http://bit.ly/PcTRK
+to setup passwordless public/private keys: http://www.ece.uci.edu/~chou/ssh-key.html
 
 CodeSync uses a project file (see example below) that tells it how to connect to 
 the server and which directories to keep in sync.
