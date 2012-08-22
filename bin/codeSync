@@ -64,7 +64,7 @@ OEM
 end
 
 verbose = false
-rsync_flags = ""
+rsync_flags = "-r "
 projectFilePath = ""
 
 ARGV.each do |arg|
