@@ -1,10 +1,19 @@
 #!/usr/bin/ruby
-# Hi Jeremy!
 require 'fileutils'
-require 'fsevents'
 
-APP = { :version => "0.1",
-        :build   => "2010-07-22" }
+# Need to require rubygems in order for rb-fsevent to work
+require 'rubygems'
+
+# Require rb-fsevent gem
+# rb-fsevent needed to fix a bug with OS X Lion
+begin
+  require 'rb-fsevent'
+rescue LoadError => e
+  print "Error: Could not require rb-fsevent: #{e.message}\n"
+end
+
+APP = { :version => "0.2",
+        :build   => "2012-08-22" }
 
 RSYNC_TIMEOUT_SEC=10
 
@@ -172,20 +181,13 @@ end
 
 # Watch for local changes
 print "\nWatching for changes in:\n"
-print "\t#{localDirs.join("\n\t")}\n"
+print "\t#{localDirs}\n"
 print "...\n"
-stream = FSEvents::Stream.watch(*localDirs) do |events|  
-  
+stream = FSEvent.new
+
+stream.watch localDirs do |fileList|  
   if verbose
     print "File event detected\n"
-  end
-  
-  # Get list of files to sync
-  fileList = events.modified_files
-  if fileList.size == 0 # directories
-    events.each do |event|
-      fileList << event.path
-    end
   end
   
   if verbose
@@ -194,33 +196,32 @@ stream = FSEvents::Stream.watch(*localDirs) do |events|
   
   # Sync
   fileList.each do |path|
-		relativePath = path.gsub(local_basedir, "");
-		remotePath = File.join(remote_basedir, relativePath)
-		
-		print "\nSynchronizing #{relativePath}...\n"
-		
-		# Make sure the directory exists
-		dir = File.dirname(remotePath)
-		cmd = "ssh #{username}#{server} mkdir -p #{dir}"
-		ret = system(cmd)
-		if ret == false
-			print "\nFAILED: Could not create the directory on the server: #{remotePath}\n\n"
-			next
-		end	
-		
-		if File.directory?(path)
-		  path << "/"
-	  end
-		
-		# Rsync
-		cmd = "rsync -ahz #{rsync_flags} #{path} #{username}#{server}:#{remotePath}"
-		ret = system(cmd)
-		if ret == false
-			print "\nFAILED: An error occurred trying to synchronize a file. See above output for more details\n\n"
-		else
-			print "DONE\n"
-		end
-	end
+    relativePath = path.gsub(local_basedir, "");
+    remotePath = File.join(remote_basedir, relativePath)
+
+    print "\nSynchronizing #{relativePath}...\n"
+
+    # Make sure the directory exists
+    dir = File.dirname(remotePath)
+    cmd = "ssh #{username}#{server} mkdir -p #{dir}"
+    ret = system(cmd)
+    if ret == false
+      print "\nFAILED: Could not create the directory on the server: #{remotePath}\n\n"
+      next
+    end 
+
+    if File.directory?(path)
+      path << "/"
+    end
+
+    # Rsync
+    cmd = "rsync -ahz #{rsync_flags} #{path} #{username}#{server}:#{remotePath}"
+    ret = system(cmd)
+    if ret == false
+      print "\nFAILED: An error occurred trying to synchronize a file. See above output for more details\n\n"
+    else
+      print "DONE\n"
+    end
+  end
 end
 stream.run
-

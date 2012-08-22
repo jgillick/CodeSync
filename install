@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PREFIX="/usr/local/"
+PREFIX="/usr/local"
 
 set -e
 
@@ -34,36 +34,17 @@ if [[ "$LIB_DIR" == "nil" || "$LIB_DIR" == "" ]]; then
   exit 1
 fi
 
-# Install RubyCocoa
-if [ "$(ruby -e "print require 'osx/foundation'" 2>/dev/null)" != "true" ]; then
-  echo "\n###############"
-  echo "## NOTICE: You do not have RubyCocoa installed!"
-  echo "###############"
-  echo "## Attempting to download and install RubyCocoa now..."
-  echo "##  + accept the server certificate if asked.\n"
-  
-  mkdir build
-  cd build
-  svn co https://rubycocoa.svn.sourceforge.net/svnroot/rubycocoa/trunk/src rubycocoa
-  cd rubycocoa
-  
-  ruby install.rb config
-  ruby install.rb setup
-  ruby install.rb install
-  
-  cd ../../
-fi
+# Check to see if rb-fsevent gem exits, if it does not install it
+# rb-fsevent needed to fix a bug with OS X Lion
+if [ "$(gem list -i rb-fsevent)" == "false" ]; then
+  echo "CodeSync requires rb-fsevent. It appears that this gem is not installed. Don't worry we'll take care of that for you!"
+  gem install rb-fsevent
+fi  
 
 echo "Done\n"
 
 echo "Installing..."
 
-# Copy files
-cp -rv lib/* $LIB_DIR
-if [ $? -ne 0 ]; then
-  echo "\nInstall Failed"
-  exit 1
-fi
 
 cp -v bin/codeSync $PREFIX/bin
 if [ $? -ne 0 ]; then

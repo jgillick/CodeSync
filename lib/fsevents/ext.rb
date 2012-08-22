@@ -1,1 +1,0 @@
-require 'fsevents/ext/array'
