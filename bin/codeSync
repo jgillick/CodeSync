@@ -64,13 +64,13 @@ OEM
 end
 
 verbose = false
-rsync_flags = "-r "
+rsync_flags = ""
 projectFilePath = ""
 
 ARGV.each do |arg|
   if arg.strip == "-v"
     verbose = true
-    rsync_flags << " -v"
+    rsync_flags << "-r -v"
   else
     projectFilePath = arg
     break
@@ -181,7 +181,7 @@ end
 
 # Watch for local changes
 print "\nWatching for changes in:\n"
-print "\t#{localDirs}\n"
+print "\t#{localDirs.join("\n\t")}\n"
 print "...\n"
 stream = FSEvent.new
 
