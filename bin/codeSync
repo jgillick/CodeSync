@@ -54,6 +54,11 @@ EXAMPLE PROJECT FILE
                "/gui/jsp" ]     
    # sync_dirs=[  ] # This will sync the entire base directories
 
+   # Directories to exclude, relative to the base directory
+   # Example: If syncing the entire trunk, you can exclude the build directory
+   # since it contains a lot of unnecessary and large files
+   exclude_dirs = [ "dist", "build", "_codegen" ]
+
    # The contents of these directories will only sync "up" to the server.
    # This means the contents will never be downloaded from the server
    # but files added or changed locally will be sent to the server
