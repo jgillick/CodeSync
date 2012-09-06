@@ -96,7 +96,7 @@ File.foreach(projectFilePath) { |s|
 
 # Execute project file
 server = username = remote_basedir = local_basedir = ""
-sync_up = sync_dirs = []
+sync_up = sync_dirs = exclude_dirs = []
 eval(contents)
 
 # Validate project file
@@ -145,6 +145,11 @@ sync_up.each do |dir|
 	localDirs << updir
 end
 
+rsyncExcludeFlags = ""
+exclude_dirs.each do |dir|
+  rsyncExcludeFlags << " --exclude '#{dir}'"
+end
+
 # Sync to local first
 syncFromRemote = false
 while true
@@ -167,7 +172,13 @@ end
 # Synchronize from the server
 if syncFromRemote	
 	print "\nSynchronizing directories...\n"
-	cmd="rsync -aRvhz --timeout=#{RSYNC_TIMEOUT_SEC} --cvs-exclude #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
+	print "#{remoteDirs}\n"
+
+  if exclude_dirs.size  > 0
+    print "Excluding directories : #{exclude_dirs.join(", ")}\n"
+  end
+
+  cmd="rsync -aRvhz --timeout=#{RSYNC_TIMEOUT_SEC} --cvs-exclude #{rsyncExcludeFlags} #{username}#{server}:'#{remoteDirs.join(" ")}' #{local_basedir}"
 	ret=system(cmd)
 	
 	# Error
